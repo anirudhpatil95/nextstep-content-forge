@@ -6,7 +6,7 @@ const steps = [
   {
     number: '01',
     title: 'Create Brand Profile',
-    description: 'Define your brand's name, description, vibe, and key selling points to create a brand profile.',
+    description: 'Define your brand name, description, vibe, and key selling points to create a brand profile.',
     image: '/step1.svg'
   },
   {
