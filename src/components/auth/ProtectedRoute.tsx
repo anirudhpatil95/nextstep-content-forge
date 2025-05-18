@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, supabaseConfigured } = useAuth();
 
   if (loading) {
     return (
@@ -17,6 +17,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         <LoadingSpinner size="lg" />
       </div>
     );
+  }
+
+  if (!supabaseConfigured) {
+    return <Navigate to="/" replace />;
   }
 
   if (!user) {
