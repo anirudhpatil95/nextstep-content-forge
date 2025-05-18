@@ -1,4 +1,3 @@
-
 # NextStep AI - Supabase Setup Guide
 
 This document provides step-by-step instructions for setting up your Supabase backend for the NextStep AI application.
@@ -43,13 +42,16 @@ Add these environment variables to your deployment platform (e.g., Vercel):
 ### SQL Script to Copy
 
 ```sql
+-- Enable necessary extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Function to create brands table
 CREATE OR REPLACE FUNCTION create_brands_table()
 RETURNS void AS $$
 BEGIN
   CREATE TABLE IF NOT EXISTS public.brands (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL,
     brand_name TEXT NOT NULL,
     description TEXT NOT NULL,
     company_vibe TEXT NOT NULL,
@@ -57,7 +59,8 @@ BEGIN
     selling_points TEXT NOT NULL,
     emotion TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
   );
   
   -- Add RLS policies
@@ -67,25 +70,25 @@ BEGIN
   CREATE POLICY "Users can view their own brands"
     ON public.brands
     FOR SELECT
-    USING (auth.uid() = user_id);
+    USING (auth.uid()::uuid = user_id::uuid);
     
   DROP POLICY IF EXISTS "Users can create their own brands" ON public.brands;
   CREATE POLICY "Users can create their own brands"
     ON public.brands
     FOR INSERT
-    WITH CHECK (auth.uid() = user_id);
+    WITH CHECK (auth.uid()::uuid = user_id::uuid);
     
   DROP POLICY IF EXISTS "Users can update their own brands" ON public.brands;
   CREATE POLICY "Users can update their own brands"
     ON public.brands
     FOR UPDATE
-    USING (auth.uid() = user_id);
+    USING (auth.uid()::uuid = user_id::uuid);
     
   DROP POLICY IF EXISTS "Users can delete their own brands" ON public.brands;
   CREATE POLICY "Users can delete their own brands"
     ON public.brands
     FOR DELETE
-    USING (auth.uid() = user_id);
+    USING (auth.uid()::uuid = user_id::uuid);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -128,11 +131,12 @@ RETURNS void AS $$
 BEGIN
   CREATE TABLE IF NOT EXISTS public.generated_content (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    brand_id UUID NOT NULL REFERENCES public.brands(id) ON DELETE CASCADE,
+    brand_id UUID NOT NULL,
     content_type TEXT NOT NULL,
     prompt TEXT NOT NULL,
     generated_text TEXT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    FOREIGN KEY (brand_id) REFERENCES public.brands(id) ON DELETE CASCADE
   );
   
   -- Add RLS policies
@@ -145,8 +149,8 @@ BEGIN
     USING (
       EXISTS (
         SELECT 1 FROM public.brands
-        WHERE public.brands.id = public.generated_content.brand_id
-        AND public.brands.user_id = auth.uid()
+        WHERE public.brands.id::uuid = public.generated_content.brand_id::uuid
+        AND public.brands.user_id::uuid = auth.uid()::uuid
       )
     );
     
@@ -157,8 +161,8 @@ BEGIN
     WITH CHECK (
       EXISTS (
         SELECT 1 FROM public.brands
-        WHERE public.brands.id = public.generated_content.brand_id
-        AND public.brands.user_id = auth.uid()
+        WHERE public.brands.id::uuid = public.generated_content.brand_id::uuid
+        AND public.brands.user_id::uuid = auth.uid()::uuid
       )
     );
     
@@ -169,8 +173,8 @@ BEGIN
     USING (
       EXISTS (
         SELECT 1 FROM public.brands
-        WHERE public.brands.id = public.generated_content.brand_id
-        AND public.brands.user_id = auth.uid()
+        WHERE public.brands.id::uuid = public.generated_content.brand_id::uuid
+        AND public.brands.user_id::uuid = auth.uid()::uuid
       )
     );
 END;
