@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { motion, useInView, useAnimation } from 'framer-motion';
 
@@ -6,13 +5,13 @@ const steps = [
   {
     number: '01',
     title: 'Create Brand Profile',
-    description: 'Define your brand name, description, vibe, and key selling points to create a brand profile.',
+    description: "Define your brand's name, description, vibe, and key selling points to create a brand profile.",
     image: '/step1.svg'
   },
   {
     number: '02',
     title: 'Customize Vibe & Emotion',
-    description: 'Fine-tune your brand's vibe and select the primary emotion you want your content to evoke.',
+    description: 'Fine-tune your brand vibe and select the primary emotion you want your content to evoke.',
     image: '/step2.svg'
   },
   {
