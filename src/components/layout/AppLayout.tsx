@@ -1,176 +1,162 @@
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useUser, useSupabaseClient } from '@supabase/auth-helpers-react';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-import React, { ReactNode, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/ui/Logo";
-import { ArrowDown } from "lucide-react";
+const AppLayout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = useUser();
+  const supabase = useSupabaseClient();
 
-interface AppLayoutProps {
-  children: ReactNode;
-}
-
-const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
-  
+  // Handle smooth scrolling for anchor links
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsHeaderScrolled(true);
-      } else {
-        setIsHeaderScrolled(false);
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A' && target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const id = target.getAttribute('href')?.replace('#', '');
+        const element = document.getElementById(id || '');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
-  // Intersection Observer for scroll animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
+  };
 
-    document.querySelectorAll('.scroll-animation').forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => {
-      document.querySelectorAll('.scroll-animation').forEach((el) => {
-        observer.unobserve(el);
-      });
-    };
-  }, []);
-  
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className={`border-b border-border sticky top-0 z-50 transition-all duration-300 ${
-        isHeaderScrolled ? 'bg-background/90 backdrop-blur-md shadow-sm' : 'bg-background/80 backdrop-blur-md'
-      }`}>
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Logo textSize="text-2xl" />
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link to="#features" className="text-sm font-medium text-foreground hover:text-nextstep-600 transition-colors">
-              Features
-            </Link>
-            <Link to="#how-it-works" className="text-sm font-medium text-foreground hover:text-nextstep-600 transition-colors">
-              How It Works
-            </Link>
-            <Link to="#pricing" className="text-sm font-medium text-foreground hover:text-nextstep-600 transition-colors">
-              Pricing
-            </Link>
-          </nav>
-          
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login" className="text-sm font-medium text-nextstep-600 hover:text-nextstep-700 transition">
-              Sign In
-            </Link>
-            <Button asChild className="bg-nextstep-600 hover:bg-nextstep-700 text-white">
-              <Link to="/signup">Get Started</Link>
-            </Button>
-          </div>
-          
-          {/* Mobile menu button */}
-          <button 
-            className="md:hidden p-2 rounded-md text-foreground"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-6 w-6" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              {isMobileMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-        
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-background border-t border-border">
-            <div className="container mx-auto px-4 py-4 space-y-4">
-              <Link to="#features" className="block text-foreground hover:text-nextstep-600 transition-colors">
-                Features
-              </Link>
-              <Link to="#how-it-works" className="block text-foreground hover:text-nextstep-600 transition-colors">
-                How It Works
-              </Link>
-              <Link to="#pricing" className="block text-foreground hover:text-nextstep-600 transition-colors">
-                Pricing
-              </Link>
-              <div className="pt-4 flex flex-col space-y-4">
-                <Link to="/login" className="text-nextstep-600 hover:text-nextstep-700">
-                  Sign In
-                </Link>
-                <Button asChild className="bg-nextstep-600 hover:bg-nextstep-700 text-white">
-                  <Link to="/signup">Get Started</Link>
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center">
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  href="/dashboard"
+                >
+                  Dashboard
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  href="#how-it-works"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  How It Works
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  href="#features"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Features
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+
+          <div className="ml-auto flex items-center space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || ''} />
+                    <AvatarFallback>{user?.email?.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
                 </Button>
-              </div>
-            </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
-        )}
+        </div>
       </header>
-      
-      <main className="flex-1">
-        {children}
+
+      <main className="container py-6">
+        <Outlet />
       </main>
-      
-      <footer className="border-t border-border py-12 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+      <footer className="border-t bg-background">
+        <div className="container py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <Logo textSize="text-xl" className="mb-4" linkTo="/" />
-              <p className="text-sm text-muted-foreground">
-                AI-powered content generation for multiple brand profiles
-              </p>
-            </div>
-            
-            <div>
-              <h3 className="font-medium mb-4">Product</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="#features" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Features</Link></li>
-                <li><Link to="#how-it-works" className="text-muted-foreground hover:text-nextstep-600 transition-colors">How It Works</Link></li>
-                <li><Link to="#pricing" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Pricing</Link></li>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-2">
+                <li><a href="/features" className="text-muted-foreground hover:text-foreground">Features</a></li>
+                <li><a href="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</a></li>
+                <li><a href="/docs" className="text-muted-foreground hover:text-foreground">Documentation</a></li>
               </ul>
             </div>
-            
             <div>
-              <h3 className="font-medium mb-4">Company</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="#about" className="text-muted-foreground hover:text-nextstep-600 transition-colors">About</Link></li>
-                <li><Link to="#blog" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Blog</Link></li>
-                <li><Link to="#careers" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Careers</Link></li>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2">
+                <li><a href="/about" className="text-muted-foreground hover:text-foreground">About</a></li>
+                <li><a href="/blog" className="text-muted-foreground hover:text-foreground">Blog</a></li>
+                <li><a href="/careers" className="text-muted-foreground hover:text-foreground">Careers</a></li>
               </ul>
             </div>
-            
             <div>
-              <h3 className="font-medium mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm">
-                <li><Link to="#privacy" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Privacy Policy</Link></li>
-                <li><Link to="#terms" className="text-muted-foreground hover:text-nextstep-600 transition-colors">Terms of Service</Link></li>
+              <h3 className="font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2">
+                <li><a href="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</a></li>
+                <li><a href="/terms" className="text-muted-foreground hover:text-foreground">Terms of Service</a></li>
+                <li><a href="/cookies" className="text-muted-foreground hover:text-foreground">Cookie Policy</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Connect</h3>
+              <ul className="space-y-2">
+                <li><a href="/contact" className="text-muted-foreground hover:text-foreground">Contact</a></li>
+                <li><a href="https://twitter.com/nextstepai" className="text-muted-foreground hover:text-foreground">Twitter</a></li>
+                <li><a href="https://linkedin.com/company/nextstepai" className="text-muted-foreground hover:text-foreground">LinkedIn</a></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>© {new Date().getFullYear()} NextStep AI. All rights reserved.</p>
+          <div className="mt-8 pt-8 border-t text-center text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} NextStep AI. All rights reserved.</p>
           </div>
         </div>
       </footer>
