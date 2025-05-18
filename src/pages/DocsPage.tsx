@@ -94,7 +94,7 @@ const DocsPage = () => {
                       <code>
                         curl -X POST https://api.nextstepai.com/v1/auth/token \<br />
                         {'  '}-H "Content-Type: application/json" \<br />
-                        {'  '}-d '{"api_key": "your_api_key"}'
+                        {'  '}-d {"\"api_key\": \"your_api_key\""}
                       </code>
                     </pre>
                   </div>
@@ -106,7 +106,7 @@ const DocsPage = () => {
                         curl -X POST https://api.nextstepai.com/v1/content/generate \<br />
                         {'  '}-H "Authorization: Bearer your_token" \<br />
                         {'  '}-H "Content-Type: application/json" \<br />
-                        {'  '}-d '{"brand_id": "123", "content_type": "social_post"}'
+                        {'  '}-d {"\"brand_id\": \"123\", \"content_type\": \"social_post\""}
                       </code>
                     </pre>
                   </div>
@@ -134,10 +134,10 @@ const DocsPage = () => {
                     <pre className="bg-muted p-4 rounded-lg overflow-x-auto">
                       <code>
                         import {'{'} NextStepAI {'}'} from '@nextstepai/sdk';<br /><br />
-                        const client = new NextStepAI('your_api_key');<br />
+                        const client = new NextStepAI("your_api_key");<br />
                         const content = await client.generateContent({'{'}<br />
-                        {'  '}brandId: '123',<br />
-                        {'  '}contentType: 'social_post'<br />
+                        {'  '}brandId: "123",<br />
+                        {'  '}contentType: "social_post"<br />
                         {'}'});
                       </code>
                     </pre>
