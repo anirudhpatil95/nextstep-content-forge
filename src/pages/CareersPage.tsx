@@ -11,7 +11,7 @@ const jobListings = [
     location: 'Remote (US)',
     type: 'Full-time',
     experience: '5+ years',
-    description: 'We're looking for a Senior Full Stack Developer to help build and scale our AI-powered content generation platform.',
+    description: "We're looking for a Senior Full Stack Developer to help build and scale our AI-powered content generation platform.",
     responsibilities: [
       'Design and implement new features for our web application',
       'Work with AI/ML engineers to integrate content generation models',
