@@ -1,7 +1,7 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { toast } from "sonner";
 
 const jobListings = [
   {
@@ -114,12 +114,12 @@ const CareersPage = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>{job.title}</CardTitle>
-                  <Button>Apply Now</Button>
+                  <Button variant="default" size="default">Apply Now</Button>
                 </div>
                 <div className="flex gap-2 mt-2">
-                  <Badge variant="secondary">{job.department}</Badge>
-                  <Badge variant="secondary">{job.location}</Badge>
-                  <Badge variant="secondary">{job.type}</Badge>
+                  <Badge variant="default">{job.department}</Badge>
+                  <Badge variant="default">{job.location}</Badge>
+                  <Badge variant="default">{job.type}</Badge>
                 </div>
               </CardHeader>
               <CardContent>
