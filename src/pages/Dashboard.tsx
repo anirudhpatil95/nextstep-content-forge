@@ -16,7 +16,9 @@ interface Brand {
   brand_name: string;
   description: string;
   company_vibe: string;
+  custom_vibe?: string;
   selling_points: string;
+  emotion?: string;
   created_at: string;
 }
 
@@ -187,7 +189,7 @@ const Dashboard = () => {
         ) : brands.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {brands.map((brand) => (
-              <Card key={brand.id} className="nextstep-card">
+              <Card key={brand.id} className="nextstep-card hover:shadow-lg transition-all duration-300">
                 <CardHeader>
                   <CardTitle>{brand.brand_name}</CardTitle>
                   <CardDescription className="line-clamp-2">
@@ -200,6 +202,12 @@ const Dashboard = () => {
                       <span className="text-sm font-medium">Company Vibe:</span>
                       <span className="ml-1 text-sm text-muted-foreground">{brand.company_vibe}</span>
                     </div>
+                    {brand.emotion && (
+                      <div>
+                        <span className="text-sm font-medium">Primary Emotion:</span>
+                        <span className="ml-1 text-sm text-muted-foreground">{brand.emotion}</span>
+                      </div>
+                    )}
                     <div>
                       <span className="text-sm font-medium">Selling Points:</span>
                       <p className="text-sm text-muted-foreground line-clamp-3">{brand.selling_points}</p>

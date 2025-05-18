@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, initializeDatabase, initializeVibeMatrix } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 type AuthContextType = {
@@ -49,6 +49,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } else {
           setSession(session);
           setUser(session?.user ?? null);
+          
+          // Initialize database tables and vibe matrix if user is logged in
+          if (session?.user) {
+            initializeDatabase();
+            initializeVibeMatrix();
+          }
         }
       } catch (err) {
         console.error('Unexpected error during authentication:', err);
@@ -68,6 +74,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setSession(session);
           setUser(session?.user ?? null);
           setLoading(false);
+          
+          // Initialize database tables and vibe matrix if user is logged in
+          if (session?.user) {
+            initializeDatabase();
+            initializeVibeMatrix();
+          }
         }
       );
       

@@ -119,12 +119,35 @@
 }
 
 @layer utilities {
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+
   .animation-delay-2000 {
     animation-delay: 2s;
   }
   
   .animation-delay-4000 {
     animation-delay: 4s;
+  }
+  
+  .scroll-animation {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  
+  .scroll-animation.animate-fade-in {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -143,8 +166,28 @@
   }
 }
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer utilities {
   .animate-blob {
     animation: blob 7s infinite;
   }
+  
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
 }

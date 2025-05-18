@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import Logo from "@/components/ui/Logo";
 import { 
   LucideHome, 
   Menu, 
@@ -42,9 +43,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       {/* Mobile Top Navigation */}
       <div className="md:hidden bg-white border-b border-gray-200 fixed top-0 w-full z-30">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link to="/dashboard" className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-nextstep-600 to-nextstep-800">
-            NextStep AI
-          </Link>
+          <Logo textSize="text-xl" linkTo="/dashboard" />
           <button
             onClick={toggleSidebar}
             className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
@@ -73,9 +72,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       >
         <div className="h-full flex flex-col">
           <div className="hidden md:flex items-center justify-center px-4 py-6 border-b border-gray-200">
-            <Link to="/dashboard" className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-nextstep-600 to-nextstep-800">
-              NextStep AI
-            </Link>
+            <Logo textSize="text-xl" linkTo="/dashboard" />
           </div>
 
           {/* Sidebar content */}
