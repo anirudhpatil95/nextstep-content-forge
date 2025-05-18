@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +14,8 @@ import { Card } from "@/components/ui/card";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { supabase } from "@/lib/supabase";
 import { PlusCircle } from "lucide-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { toast } from "@/components/ui/use-toast";
 
 interface BrandFormData {
   brand_name: string;
@@ -188,7 +189,11 @@ const BrandForm: React.FC<BrandFormProps> = ({ onSubmit, initialData }) => {
           
           if (insertError) {
             console.error("Error adding custom vibe to matrix:", insertError);
-            toast.error("Failed to add custom vibe");
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: "Failed to add custom vibe"
+            });
           } else {
             console.log("Custom vibe added to matrix");
           }

@@ -1,7 +1,4 @@
-
-// This is a reference file for creating an Edge Function in your Supabase project
-// Copy this code to your Supabase Edge Functions section
-
+// This is a Supabase Edge Function
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 

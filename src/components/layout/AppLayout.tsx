@@ -18,7 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const AppLayout = () => {
+interface AppLayoutProps {
+  children?: React.ReactNode;
+}
+
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const user = useUser();
@@ -65,7 +69,7 @@ const AppLayout = () => {
                 <NavigationMenuLink
                   className={navigationMenuTriggerStyle()}
                   href="#how-it-works"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault();
                     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
                   }}
@@ -77,7 +81,7 @@ const AppLayout = () => {
                 <NavigationMenuLink
                   className={navigationMenuTriggerStyle()}
                   href="#features"
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                     e.preventDefault();
                     document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
                   }}
@@ -116,7 +120,7 @@ const AppLayout = () => {
       </header>
 
       <main className="container py-6">
-        <Outlet />
+        {children || <Outlet />}
       </main>
 
       <footer className="border-t bg-background">
