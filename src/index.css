@@ -92,6 +92,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 }
 
@@ -105,14 +106,45 @@
   }
   
   .nextstep-button {
-    @apply flex items-center justify-center px-6 py-3 font-medium text-white transition-all duration-200 rounded-md shadow-md bg-nextstep-600 hover:bg-nextstep-700 focus:outline-none focus:ring-2 focus:ring-nextstep-500 focus:ring-offset-2;
+    @apply flex items-center justify-center font-medium text-white transition-all duration-200 rounded-md shadow-md bg-nextstep-600 hover:bg-nextstep-700 focus:outline-none focus:ring-2 focus:ring-nextstep-500 focus:ring-offset-2;
   }
   
   .nextstep-button-secondary {
-    @apply flex items-center justify-center px-6 py-3 font-medium transition-all duration-200 border rounded-md shadow-sm border-nextstep-200 text-nextstep-700 bg-nextstep-50 hover:bg-nextstep-100 focus:outline-none focus:ring-2 focus:ring-nextstep-500 focus:ring-offset-2;
+    @apply flex items-center justify-center font-medium transition-all duration-200 border rounded-md shadow-sm border-nextstep-200 text-nextstep-700 bg-nextstep-50 hover:bg-nextstep-100 focus:outline-none focus:ring-2 focus:ring-nextstep-500 focus:ring-offset-2;
   }
   
   .nextstep-card {
     @apply p-6 rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-200 hover:shadow-md;
+  }
+}
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@layer utilities {
+  .animate-blob {
+    animation: blob 7s infinite;
   }
 }
