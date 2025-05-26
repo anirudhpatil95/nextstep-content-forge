@@ -89,7 +89,13 @@ const App = () => {
             case 'brand-tone':
                 return <BrandTonePage db={db} auth={auth} userId={userId} isAuthReady={isAuthReady} />;
             default:
-                return <HomeSection navigateTo={navigateTo} />;
+              return (
+                <>
+                    <HeroSection navigateTo={navigateTo} />
+                    <FeaturesSection />
+                    <CallToActionSection navigateTo={navigateTo} />
+                </>
+            );
         }
     };
 
